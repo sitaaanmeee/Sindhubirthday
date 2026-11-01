@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sugarplum Dreamland 🎀 — For My Sister Sindhu</title>
+  
+  <!-- Requested Typography: Fredoka (Headings), Nunito (Body), Caveat (Handwritten Notes) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================
+       1. GLOBAL DESIGN SYSTEM & PALETTE
+       ========================================================== */
+    :root {
+      --bg-cream: #FFF9F0;
+      --bg-white: #FFFEFC;
+      --blush-pink: #F8C8DC;
+      --baby-pink: #FFE4EE;
+      --rose-pink: #E99AB5;
+      --rose-deep: #D47997;
+      --pastel-lavender: #E6DDF8;
+      --lavender-deep: #8E73B9;
+      --baby-blue: #DDF1FF;
+      --pastel-mint: #DDF3E4;
+      --soft-peach: #FFDCC8;
+      --warm-cocoa: #6B4F55;
+      --cocoa-muted: #957A80;
+      
+      --card-border: rgba(248, 200, 220, 0.65);
+      --card-shadow: 0 10px 30px rgba(233, 154, 181, 0.12);
+      --card-shadow-hover: 0 18px 40px rgba(233, 154, 181, 0.25);
+
+      --font-heading: 'Fredoka', cursive, sans-serif;
+      --font-body: 'Nunito', sans-serif;
+      --font-hand: 'Caveat', cursive;
+
+      --radius-sm: 14px;
+      --radius-md: 22px;
+      --radius-lg: 32px;
+      --radius-pill: 9999px;
+
+      --transition-cozy: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      background-image: 
+        radial-gradient(circle, rgba(233, 154, 181, 0.16) 1.5px, transparent 1.5px),
+        linear-gradient(180deg, #FFF9F0 0%, #FFF3F7 50%, #FFF9F0 100%);
+      background-size: 26px 26px, 100% 100%;
+      background-attachment: fixed;
+      color: var(--warm-cocoa);
+      font-family: var(--font-body);
+      line-height: 1.65;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    #fairy-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ==========================================================
+       2. COZY LOADER SCREEN
+       ========================================================== */
+    #loader-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-cream);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: opacity 0.7s ease, visibility 0.7s;
+    }
+
+    .loader-box {
+      text-align: center;
+      max-width: 420px;
+    }
+
+    .loader-plushie {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 16px;
+      animation: floatPlush 1.8s infinite ease-in-out;
+      filter: drop-shadow(0 8px 16px rgba(233, 154, 181, 0.35));
+    }
+
+    @keyframes floatPlush {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-10px) rotate(4deg); }
+    }
+
+    .loader-title {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      color: var(--rose-deep);
+      margin-bottom: 6px;
+    }
+
+    .loader-sub {
+      font-family: var(--font-hand);
+      font-size: 1.35rem;
+      color: var(--cocoa-muted);
+      margin-bottom: 20px;
+    }
+
+    .loader-track {
+      width: 220px;
+      height: 12px;
+      background: var(--baby-pink);
+      border-radius: var(--radius-pill);
+      padding: 2px;
+      border: 1.5px solid var(--blush-pink);
+      margin: 0 auto 18px;
+      overflow: hidden;
+    }
+
+    .loader-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--rose-pink), var(--pastel-lavender));
+      border-radius: var(--radius-pill);
+      transition: width 0.15s ease-out;
+    }
+
+    #enter-button {
+      display: none;
+      background: linear-gradient(135deg, var(--rose-pink), var(--rose-deep));
+      color: #FFF;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      padding: 14px 34px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(233, 154, 181, 0.45);
+      animation: bouncePrompt 1.4s infinite alternate;
+    }
+
+    @keyframes bouncePrompt {
+      0% { transform: scale(0.98); }
+      100% { transform: scale(1.05); }
+    }
+
+    /* ==========================================================
+       3. FLOATING MUSIC DOCK (FUNCTIONAL BGM)
+       ========================================================== */
+    .music-dock {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10000;
+      background: rgba(255, 254, 252, 0.94);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--blush-pink);
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 10px 30px rgba(233, 154, 181, 0.28);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: var(--transition-cozy);
+    }
+
+    .music-dock:hover {
+      box-shadow: 0 14px 38px rgba(233, 154, 181, 0.38);
+    }
+
+    .music-toggle-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose-pink), var(--rose-deep));
+      color: #FFF;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .music-toggle-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .music-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .music-track-title {
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      color: var(--rose-deep);
+      line-height: 1.2;
+    }
+
+    .music-mode-picker {
+      font-size: 0.72rem;
+      color: var(--cocoa-muted);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .music-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2.5px;
+      height: 14px;
+    }
+    .music-bars span {
+      width: 3px;
+      height: 4px;
+      background: var(--rose-pink);
+      border-radius: 2px;
+      transition: height 0.2s;
+    }
+    .music-dock.playing .music-bars span:nth-child(1) { animation: barJump 0.8s infinite 0.1s alternate; }
+    .music-dock.playing .music-bars span:nth-child(2) { animation: barJump 0.8s infinite 0.3s alternate; }
+    .music-dock.playing .music-bars span:nth-child(3) { animation: barJump 0.8s infinite 0.2s alternate; }
+
+    @keyframes barJump {
+      to { height: 16px; background: var(--lavender-deep); }
+    }
+
+    .volume-slider {
+      width: 55px;
+      accent-color: var(--rose-pink);
+      cursor: pointer;
+    }
+
+    /* Top Sticky Navigation */
+    .top-nav {
+      position: sticky;
+      top: 14px;
+      z-index: 9000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .brand-pill {
+      pointer-events: auto;
+      background: rgba(255, 254, 252, 0.94);
+      backdrop-filter: blur(8px);
+      border: 2px solid var(--blush-pink);
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      box-shadow: var(--card-shadow);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      color: var(--rose-deep);
+    }
+
+    /* ==========================================================
+       4. HERO BANNER
+       ========================================================== */
+    .hero-container {
+      position: relative;
+      max-width: 900px;
+      margin: 20px auto 40px;
+      padding: 40px 24px 20px;
+      text-align: center;
+    }
+
+    .hero-card {
+      background: var(--bg-white);
+      border: 3px solid var(--baby-pink);
+      border-radius: var(--radius-lg);
+      padding: 50px 30px 42px;
+      box-shadow: 0 16px 45px rgba(248, 200, 220, 0.4);
+      position: relative;
+      overflow: visible;
+    }
+
+    .hero-washi-tape {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      background: rgba(230, 221, 248, 0.9);
+      border-left: 4px dashed rgba(142, 115, 185, 0.4);
+      border-right: 4px dashed rgba(142, 115, 185, 0.4);
+      padding: 4px 34px;
+      font-family: var(--font-hand);
+      font-size: 1.25rem;
+      color: var(--lavender-deep);
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      z-index: 5;
+    }
+
+    .coquette-bow {
+      display: inline-block;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 4px 10px rgba(233, 154, 181, 0.3));
+    }
+
+    .hero-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 18px;
+      background: var(--pastel-mint);
+      border: 1.5px solid #c0e7cc;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      color: #3b744a;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.2rem, 6.5vw, 3.8rem);
+      color: var(--rose-deep);
+      line-height: 1.15;
+      margin-bottom: 14px;
+      text-shadow: 2px 2px 0px var(--baby-pink);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--warm-cocoa);
+      max-width: 580px;
+      margin: 0 auto 28px;
+      font-weight: 600;
+    }
+
+    .hero-action-group {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .cozy-btn {
+      background: linear-gradient(135deg, var(--rose-pink), var(--rose-deep));
+      color: #FFF;
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      padding: 14px 32px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(233, 154, 181, 0.45);
+      transition: var(--transition-cozy);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .cozy-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(233, 154, 181, 0.55);
+      color: #FFF;
+    }
+
+    .cozy-btn-secondary {
+      background: var(--bg-white);
+      color: var(--rose-deep);
+      border: 2px solid var(--blush-pink);
+      box-shadow: var(--card-shadow);
+    }
+    .cozy-btn-secondary:hover {
+      background: var(--baby-pink);
+      color: var(--rose-deep);
+    }
+
+    /* Universal Section Shell */
+    section {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 55px 20px 25px;
+      position: relative;
+    }
+
+    .section-ribbon {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-hand);
+      font-size: 1.55rem;
+      color: var(--rose-pink);
+      font-weight: 700;
+      margin-bottom: 2px;
+      display: inline-block;
+      transform: rotate(-1.5deg);
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4.5vw, 2.7rem);
+      color: var(--rose-deep);
+    }
+
+    .section-desc {
+      color: var(--cocoa-muted);
+      font-size: 1rem;
+      margin-top: 6px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .scrapbook-card {
+      background: var(--bg-white);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 34px 28px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .scrapbook-card:hover {
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    /* ==========================================================
+       5. LIFETIME COUNTER
+       ========================================================== */
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 15px;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .counter-chip {
+      background: var(--baby-pink);
+      border: 2px dashed var(--rose-pink);
+      padding: 16px 12px;
+      border-radius: var(--radius-md);
+    }
+
+    .counter-value {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      color: var(--rose-deep);
+      display: block;
+      line-height: 1.1;
+    }
+
+    .counter-label {
+      font-size: 0.85rem;
+      color: var(--warm-cocoa);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ==========================================================
+       6. SISTER DIARY TIMELINE
+       ========================================================== */
+    .diary-timeline {
+      position: relative;
+      padding-left: 36px;
+    }
+
+    .diary-timeline::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 15px;
+      bottom: 20px;
+      width: 4px;
+      background: linear-gradient(180deg, var(--blush-pink), var(--soft-peach), var(--pastel-lavender));
+      border-radius: var(--radius-pill);
+    }
+
+    .diary-entry {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .diary-pin {
+      position: absolute;
+      left: -37px;
+      top: 0px;
+      width: 28px;
+      height: 28px;
+      background: #FFF;
+      border: 3px solid var(--rose-pink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 8px rgba(233, 154, 181, 0.25);
+    }
+
+    .diary-tag {
+      display: inline-block;
+      background: var(--baby-pink);
+      color: var(--rose-deep);
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 6px;
+      border: 1px solid var(--blush-pink);
+    }
+
+    .diary-text {
+      color: var(--warm-cocoa);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    /* ==========================================================
+       7. EXACTLY 3 POLAROIDS
+       ========================================================== */
+    .polaroid-stage {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 34px;
+      margin-top: 10px;
+    }
+
+    .scrapbook-polaroid {
+      background: #FFF;
+      border-radius: 8px;
+      padding: 16px 16px 26px 16px;
+      box-shadow: 0 14px 34px rgba(107, 79, 85, 0.12);
+      border: 1px solid rgba(248, 200, 220, 0.5);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .scrapbook-polaroid::before {
+      content: '';
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1.5deg);
+      width: 105px;
+      height: 28px;
+      background: rgba(248, 200, 220, 0.85);
+      backdrop-filter: blur(2px);
+      border-left: 3px dashed rgba(233, 154, 181, 0.6);
+      border-right: 3px dashed rgba(233, 154, 181, 0.6);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      z-index: 5;
+    }
+
+    .scrapbook-polaroid:nth-child(1) { transform: rotate(-2.8deg); }
+    .scrapbook-polaroid:nth-child(2) { transform: rotate(2.2deg) translateY(-8px); }
+    .scrapbook-polaroid:nth-child(3) { transform: rotate(-1.5deg); }
+
+    .scrapbook-polaroid:hover {
+      transform: rotate(0deg) scale(1.05) translateY(-10px) !important;
+      box-shadow: 0 22px 45px rgba(233, 154, 181, 0.35);
+      z-index: 10;
+    }
+
+    .polaroid-frame {
+      width: 100%;
+      height: 270px;
+      background: #FFF6FA;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .polaroid-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .polaroid-caption {
+      font-family: var(--font-hand);
+      font-size: 1.65rem;
+      color: var(--rose-deep);
+      text-align: center;
+      margin-top: 14px;
+      font-weight: 700;
+    }
+
+    /* ==========================================================
+       8. COQUETTE ENVELOPE & BROTHER'S LETTER
+       ========================================================== */
+    .envelope-wrapper {
+      max-width: 480px;
+      margin: 15px auto;
+      cursor: pointer;
+    }
+
+    .envelope-box {
+      width: 100%;
+      height: 250px;
+      background: linear-gradient(135deg, var(--baby-pink), var(--soft-peach));
+      border: 3px solid var(--blush-pink);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 36px rgba(233, 154, 181, 0.28);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-cozy);
+    }
+
+    .envelope-box:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 22px 48px rgba(233, 154, 181, 0.38);
+    }
+
+    .wax-seal {
+      width: 72px;
+      height: 72px;
+      background: radial-gradient(circle, var(--rose-pink), var(--rose-deep));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      box-shadow: 0 6px 18px rgba(212, 121, 151, 0.4);
+      border: 3px solid #FFF;
+    }
+
+    .envelope-to-label {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      color: var(--rose-deep);
+      margin-top: 14px;
+    }
+
+    /* ==========================================================
+       9. NEW: BROTHER'S SISTER VOUCHERS / COUPON BOOK
+       ========================================================== */
+    .coupons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .coupon-card {
+      background: #FFF;
+      border: 2px dashed var(--rose-pink);
+      border-radius: var(--radius-md);
+      padding: 22px 18px;
+      position: relative;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .coupon-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .coupon-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-family: var(--font-heading);
+      background: var(--pastel-lavender);
+      color: var(--lavender-deep);
+      padding: 4px 10px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      width: fit-content;
+    }
+
+    .coupon-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      color: var(--rose-deep);
+      margin-bottom: 6px;
+    }
+
+    .coupon-terms {
+      font-size: 0.92rem;
+      color: var(--warm-cocoa);
+      margin-bottom: 16px;
+    }
+
+    .redeem-btn {
+      background: var(--baby-pink);
+      border: 1.5px solid var(--rose-pink);
+      color: var(--rose-deep);
+      font-family: var(--font-heading);
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .redeem-btn:hover {
+      background: var(--rose-pink);
+      color: #FFF;
+    }
+
+    .coupon-card.redeemed .redeem-btn {
+      background: var(--pastel-mint);
+      border-color: #78c48e;
+      color: #276939;
+      cursor: default;
+    }
+
+    .redeemed-stamp {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      border: 3px solid #ff4d73;
+      color: #ff4d73;
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      padding: 6px 16px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .coupon-card.redeemed .redeemed-stamp {
+      opacity: 0.88;
+    }
+
+    /* ==========================================================
+       10. NEW: "OPEN WHEN..." ENVELOPES
+       ========================================================== */
+    .open-when-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin-top: 15px;
+    }
+
+    .open-when-card {
+      background: linear-gradient(135deg, #FFF6FA, #FFF);
+      border: 2px solid var(--blush-pink);
+      border-radius: var(--radius-md);
+      padding: 24px 18px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition-cozy);
+    }
+
+    .open-when-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--rose-pink);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .open-when-icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .open-when-label {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      color: var(--rose-deep);
+    }
+
+    /* ==========================================================
+       11. NEW: INFINITE SIBLING COMPLIMENT & HUG JAR
+       ========================================================== */
+    .jar-container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .cookie-jar-btn {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--baby-pink), var(--soft-peach));
+      border: 3px dashed var(--rose-pink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(233, 154, 181, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .cookie-jar-btn:hover {
+      transform: scale(1.08) rotate(5deg);
+      box-shadow: 0 14px 35px rgba(233, 154, 181, 0.45);
+    }
+
+    .compliment-bubble {
+      background: #FFF;
+      border: 2px solid var(--rose-pink);
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      max-width: 520px;
+      margin: 0 auto;
+      font-family: var(--font-hand);
+      font-size: 1.65rem;
+      color: var(--rose-deep);
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s;
+    }
+
+    /* ==========================================================
+       12. 8 REASONS FLIP CARDS
+       ========================================================== */
+    .reasons-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--baby-pink);
+      border: 1.5px solid var(--blush-pink);
+      padding: 10px 20px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-heading);
+      color: var(--rose-deep);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .reasons-deck {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 16px;
+    }
+
+    .reason-card-unit {
+      height: 145px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .reason-card-flipper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+      border-radius: var(--radius-sm);
+    }
+
+    .reason-card-unit.is-flipped .reason-card-flipper {
+      transform: rotateY(180deg);
+    }
+
+    .reason-side {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .reason-side-front {
+      background: #FFF;
+      border: 2px solid var(--blush-pink);
+      box-shadow: 0 6px 14px rgba(248, 200, 220, 0.15);
+    }
+
+    .reason-side-front span:first-child {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      color: var(--rose-pink);
+    }
+    .reason-side-front span:last-child {
+      font-size: 0.8rem;
+      color: var(--cocoa-muted);
+      font-weight: 700;
+    }
+
+    .reason-side-back {
+      background: linear-gradient(135deg, var(--rose-pink), var(--rose-deep));
+      color: #FFF;
+      transform: rotateY(180deg);
+      font-size: 0.88rem;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    /* ==========================================================
+       13. MINI GAME: CATCH THE BOBA & BERRIES
+       ========================================================== */
+    .game-viewport {
+      height: 380px;
+      background: linear-gradient(180deg, #FFF4F8 0%, #FFFDF9 100%);
+      border: 2px dashed var(--blush-pink);
+      border-radius: var(--radius-md);
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      margin-top: 14px;
+    }
+
+    .game-hud {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      color: var(--rose-deep);
+      z-index: 10;
+    }
+
+    #picnic-basket {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.8rem;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .dropping-treat {
+      position: absolute;
+      font-size: 1.9rem;
+      pointer-events: none;
+      animation: dropDown linear forwards;
+    }
+
+    @keyframes dropDown {
+      from { top: -45px; }
+      to { top: 410px; }
+    }
+
+    /* ==========================================================
+       14. KAWAII CAKE & CANDLE BLOW FINALE
+       ========================================================== */
+    .cake-spotlight {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 16px;
+    }
+
+    .kawaii-cake-container {
+      position: relative;
+      width: 250px;
+      height: 195px;
+      margin-bottom: 24px;
+    }
+
+    .candles-tier {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-evenly;
+      padding: 0 42px;
+      z-index: 5;
+    }
+
+    .striped-candle {
+      position: relative;
+      width: 14px;
+      height: 54px;
+      background: repeating-linear-gradient(45deg, var(--blush-pink), var(--blush-pink) 6px, #FFF 6px, #FFF 12px);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .candle-flame-orb {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 24px;
+      background: radial-gradient(circle at 50% 80%, #FFF 25%, #FFD359 65%, #FF8A50 100%);
+      border-radius: 50% 50% 35% 35%;
+      box-shadow: 0 0 16px #FFAF38;
+      animation: flameSway 0.7s infinite alternate ease-in-out;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+
+    .candle-flame-orb.blown {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.15);
+    }
+
+    @keyframes flameSway {
+      0% { transform: translateX(-50%) rotate(-3deg) scale(0.95); }
+      100% { transform: translateX(-50%) rotate(3deg) scale(1.08); }
+    }
+
+    .sponge-cake {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 135px;
+      background: var(--baby-pink);
+      border-radius: var(--radius-md);
+      border: 3px solid var(--blush-pink);
+      box-shadow: 0 14px 28px rgba(233, 154, 181, 0.25);
+    }
+
+    .cream-drips {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 42px;
+      background: #FFF;
+      border-radius: 20px 20px 14px 14px;
+      box-shadow: inset 0 -3px 6px rgba(248, 200, 220, 0.25);
+    }
+
+    .cream-drips::after {
+      content: '🍓 🎀 🍓';
+      position: absolute;
+      top: 50px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 1.6rem;
+    }
+
+    .mic-sensor-btn {
+      background: #FFF;
+      border: 2px solid var(--rose-pink);
+      color: var(--rose-deep);
+      font-family: var(--font-heading);
+      padding: 10px 24px;
+      border-radius: var(--radius-pill);
+      font-size: 0.95rem;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: var(--transition-cozy);
+    }
+
+    .mic-sensor-btn:hover {
+      background: var(--baby-pink);
+      transform: translateY(-2px);
+    }
+
+    #finale-congrats {
+      display: none;
+      animation: popCelebrate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      margin-top: 32px;
+      text-align: center;
+    }
+
+    @keyframes popCelebrate {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    #confetti-sky {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Universal Modal styling */
+    .cozy-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(107, 79, 85, 0.72);
+      backdrop-filter: blur(8px);
+      z-index: 95000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .cozy-modal.active {
+      display: flex;
+    }
+
+    .modal-paper {
+      background: #FFF;
+      padding: 34px 28px;
+      border-radius: var(--radius-md);
+      max-width: 580px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--baby-pink);
+      color: var(--rose-deep);
+      border: 2px solid var(--blush-pink);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 50px 20px 80px;
+      font-family: var(--font-hand);
+      font-size: 1.6rem;
+      color: var(--rose-deep);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Decorative canvas -->
+  <canvas id="fairy-canvas"></canvas>
+  <canvas id="confetti-sky"></canvas>
+
+  <!-- 1. INTRO / LOADER SCREEN -->
+  <div id="loader-screen">
+    <div class="loader-box">
+      <!-- Teddy bear SVG -->
+      <svg class="loader-plushie" viewBox="0 0 100 100" fill="none">
+        <circle cx="28" cy="28" r="14" fill="#FFDCC8" stroke="#E99AB5" stroke-width="3"/>
+        <circle cx="28" cy="28" r="8" fill="#F8C8DC"/>
+        <circle cx="72" cy="28" r="14" fill="#FFDCC8" stroke="#E99AB5" stroke-width="3"/>
+        <circle cx="72" cy="28" r="8" fill="#F8C8DC"/>
+        <ellipse cx="50" cy="54" rx="34" ry="30" fill="#FFDCC8" stroke="#E99AB5" stroke-width="3"/>
+        <ellipse cx="50" cy="58" rx="16" ry="12" fill="#FFF9F0"/>
+        <circle cx="40" cy="48" r="4" fill="#6B4F55"/>
+        <circle cx="60" cy="48" r="4" fill="#6B4F55"/>
+        <ellipse cx="50" cy="54" rx="5" ry="3" fill="#6B4F55"/>
+        <path d="M46 60 Q50 64 54 60" stroke="#6B4F55" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="34" cy="56" rx="5" ry="3" fill="#F8C8DC"/>
+        <ellipse cx="66" cy="56" rx="5" ry="3" fill="#F8C8DC"/>
+        <path d="M50 24 C44 14 36 20 44 26 C36 32 44 38 50 28 C56 38 64 32 56 26 C64 20 56 14 50 24 Z" fill="#E99AB5"/>
+      </svg>
+
+      <h2 class="loader-title">Sugarplum Dreamland 🎀</h2>
+      <p class="loader-sub">Preparing Sindhu's little world of love...</p>
+      
+      <div class="loader-track">
+        <div class="loader-bar" id="load-meter"></div>
+      </div>
+
+      <button id="enter-button" onclick="enterDreamland()">
+        Open Surprise & Play Music 🎶✨
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. STICKY TOP BRAND BAR -->
+  <header class="top-nav">
+    <div class="brand-pill">
+      <span>🎀</span>
+      <span>Sindhu's Dreamland</span>
+    </div>
+  </header>
+
+  <!-- 3. FLOATING FUNCTIONAL MUSIC DOCK -->
+  <div class="music-dock" id="music-dock-pill">
+    <button class="music-toggle-btn" id="play-pause-btn" onclick="toggleAudio()" title="Play / Pause Melody">▶</button>
+    <div class="music-meta">
+      <span class="music-track-title" id="track-name-label">Fairy Music Box 🎶</span>
+      <span class="music-mode-picker" onclick="switchAudioSource()">Switch Track ↺</span>
+    </div>
+    <div class="music-bars">
+      <span></span><span></span><span></span>
+    </div>
+    <input type="range" class="volume-slider" id="vol-slider" min="0" max="1" step="0.05" value="0.7" onchange="adjustVolume(this.value)" title="Volume">
+  </div>
+
+  <!-- 4. HERO SECTION -->
+  <section class="hero-container">
+    <div class="hero-card">
+      <div class="hero-washi-tape">✨ Made With Love By Your Brother ✨</div>
+
+      <!-- Coquette Ribbon Vector -->
+      <svg class="coquette-bow" viewBox="0 0 100 80" fill="none">
+        <path d="M50 36 C42 16 18 20 28 42 C16 54 36 64 50 44 Z" fill="#F8C8DC" stroke="#E99AB5" stroke-width="3"/>
+        <path d="M50 36 C58 16 82 20 72 42 C84 54 64 64 50 44 Z" fill="#F8C8DC" stroke="#E99AB5" stroke-width="3"/>
+        <circle cx="50" cy="40" r="8" fill="#E99AB5"/>
+        <path d="M44 44 C38 60 30 72 24 76" stroke="#E99AB5" stroke-width="4" stroke-linecap="round"/>
+        <path d="M56 44 C62 60 70 72 76 76" stroke="#E99AB5" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+
+      <div>
+        <span class="hero-date-badge">🎂 Born November 02, 2007 • Scorpio Queen ♏</span>
+      </div>
+
+      <h1 class="hero-title">Happy Birthday, Sindhu! 🌸</h1>
+      <p class="hero-sub">I am so truly sorry I couldn't be with you in person today. So I built you this cozy corner of the internet packed with our memories, secret sister vouchers, and endless love!</p>
+
+      <div class="hero-action-group">
+        <a href="#letter-section" class="cozy-btn">Read Brother's Letter 💌</a>
+        <a href="#vouchers-section" class="cozy-btn cozy-btn-secondary">Sister Vouchers 🎟️</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. LIFETIME COUNTER -->
+  <section id="lifetime-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ our journey together ~</div>
+      <h2 class="section-title">Lighting Up The World For ✨</h2>
+      <p class="section-desc">Counting every single beautiful second since November 2, 2007!</p>
+    </div>
+
+    <div class="scrapbook-card">
+      <div class="counter-grid">
+        <div class="counter-chip">
+          <span class="counter-value" id="days-count">0</span>
+          <span class="counter-label">Days</span>
+        </div>
+        <div class="counter-chip">
+          <span class="counter-value" id="hours-count">0</span>
+          <span class="counter-label">Hours</span>
+        </div>
+        <div class="counter-chip">
+          <span class="counter-value" id="minutes-count">0</span>
+          <span class="counter-label">Minutes</span>
+        </div>
+        <div class="counter-chip">
+          <span class="counter-value" id="seconds-count">0</span>
+          <span class="counter-label">Seconds</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. SISTER DIARY TIMELINE -->
+  <section id="diary-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ our sweet little story ~</div>
+      <h2 class="section-title">The Legend of Sindhu 🧸</h2>
+      <p class="section-desc">From blanket forts to lifelong confidantes, every chapter has been magic.</p>
+    </div>
+
+    <div class="scrapbook-card">
+      <div class="diary-timeline">
+        <div class="diary-entry">
+          <div class="diary-pin">🎀</div>
+          <span class="diary-tag">NOVEMBER 02, 2007</span>
+          <p class="diary-text">The world became a million times sweeter (and a lot more delightfully chaotic!). You made your grand debut and officially made me a proud brother.</p>
+        </div>
+
+        <div class="diary-entry">
+          <div class="diary-pin">🧸</div>
+          <span class="diary-tag">BLANKET FORTS & TOY THEFT</span>
+          <p class="diary-text">Fighting over the TV remote, hiding secret candies under pillows, and teaming up to blame each other for mysterious messes around the house.</p>
+        </div>
+
+        <div class="diary-entry">
+          <div class="diary-pin">🧋</div>
+          <span class="diary-tag">2:00 AM CONFESSIONS</span>
+          <p class="diary-text">Late-night laughter, stealing fries from each other's plates, and talking about our wildest dreams until our eyes could barely stay open.</p>
+        </div>
+
+        <div class="diary-entry">
+          <div class="diary-pin">💖</div>
+          <span class="diary-tag">TODAY & BEYOND</span>
+          <p class="diary-text">Watching you grow into this radiant, brilliant, incredibly kind young woman. Forever proud to be your brother and biggest supporter! 🌷</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. EXACTLY 3 POLAROIDS -->
+  <section id="polaroids-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ pinned with washi tape ~</div>
+      <h2 class="section-title">3 Treasured Chapters 📸</h2>
+      <p class="section-desc">Click any polaroid to take a closer peek at our scrapbook!</p>
+    </div>
+
+    <div class="polaroid-stage">
+      <div class="scrapbook-polaroid" onclick="openPolaroidModal(0)">
+        <div class="polaroid-frame">
+          <img id="polaroid-img-0" src="media/funtime.jpeg" onerror="makePastelPlaceholder(this, 'Little Princess', '🎀')" alt="Sindhu Snapshot 1">
+        </div>
+        <div class="polaroid-caption">Chief Troublemaker 🎀</div>
+      </div>
+
+      <div class="scrapbook-polaroid" onclick="openPolaroidModal(1)">
+        <div class="polaroid-frame">
+          <img id="polaroid-img-1" src="media/smile.jpeg" onerror="makePastelPlaceholder(this, 'Sunshine Smile', '☀️')" alt="Sindhu Snapshot 2">
+        </div>
+        <div class="polaroid-caption">Prettiest Smile ☀️</div>
+      </div>
+
+      <div class="scrapbook-polaroid" onclick="openPolaroidModal(2)">
+        <div class="polaroid-frame">
+          <img id="polaroid-img-2" src="media/babysis.jpeg" onerror="makePastelPlaceholder(this, 'Forever Teammates', '🌸')" alt="Sindhu Snapshot 3">
+        </div>
+        <div class="polaroid-caption">Forever Teammates 🫶</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. COQUETTE ENVELOPE & BROTHER'S LETTER -->
+  <section id="letter-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ sealed with a heart ~</div>
+      <h2 class="section-title">A Letter From Your Brother 💌</h2>
+      <p class="section-desc">Tap the wax seal to break the envelope and read my letter.</p>
+    </div>
+
+    <div class="envelope-wrapper" onclick="openLetterSheet()">
+      <div class="envelope-box">
+        <div class="wax-seal">💖</div>
+        <div class="envelope-to-label">To: My Beloved Sister Sindhu 🎀 • From: Your Brother</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. NEW: BROTHER'S SISTER VOUCHERS -->
+  <section id="vouchers-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ guaranteed brother promises ~</div>
+      <h2 class="section-title">Sindhu's Sister Vouchers 🎟️</h2>
+      <p class="section-desc">Valid forever. Tap "Redeem" whenever you want to claim one from me!</p>
+    </div>
+
+    <div class="coupons-grid">
+      <div class="coupon-card" id="coup-1">
+        <span class="coupon-badge">Sweet Treats</span>
+        <h3 class="coupon-title">Boba & Dessert Run 🧋</h3>
+        <p class="coupon-terms">Your brother will buy you your favorite iced milk tea, pastries, or waffles—no questions asked!</p>
+        <button class="redeem-btn" onclick="redeemCoupon('coup-1', 'Boba & Dessert Run')">Redeem Coupon ✨</button>
+        <div class="redeemed-stamp">REDEEMED 💖</div>
+      </div>
+
+      <div class="coupon-card" id="coup-2">
+        <span class="coupon-badge">Sibling Immunity</span>
+        <h3 class="coupon-title">You Win The Argument 👑</h3>
+        <p class="coupon-terms">Hand this over in any sibling debate. Your brother will immediately concede that you were 100% right!</p>
+        <button class="redeem-btn" onclick="redeemCoupon('coup-2', 'Argument Immunity')">Redeem Coupon ✨</button>
+        <div class="redeemed-stamp">REDEEMED 💖</div>
+      </div>
+
+      <div class="coupon-card" id="coup-3">
+        <span class="coupon-badge">Support 24/7</span>
+        <h3 class="coupon-title">Emergency Vent Session 📞</h3>
+        <p class="coupon-terms">1 hour of dedicated listening, zero unsolicited advice, full sibling support whenever you need to vent.</p>
+        <button class="redeem-btn" onclick="redeemCoupon('coup-3', 'Vent Session')">Redeem Coupon ✨</button>
+        <div class="redeemed-stamp">REDEEMED 💖</div>
+      </div>
+
+      <div class="coupon-card" id="coup-4">
+        <span class="coupon-badge">VIP Butler</span>
+        <h3 class="coupon-title">Shopping Bag Carrier 🛍️</h3>
+        <p class="coupon-terms">Valid on our next outing together. Your brother will carry all shopping bags & provide good vibes!</p>
+        <button class="redeem-btn" onclick="redeemCoupon('coup-4', 'Shopping Carrier')">Redeem Coupon ✨</button>
+        <div class="redeemed-stamp">REDEEMED 💖</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. NEW: "OPEN WHEN..." CARDS -->
+  <section id="open-when-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ for every mood ~</div>
+      <h2 class="section-title">Open When... Envelopes 💌</h2>
+      <p class="section-desc">Whenever you feel a certain way, tap the card for a little reminder from me.</p>
+    </div>
+
+    <div class="open-when-grid">
+      <div class="open-when-card" onclick="openWhenModal(0)">
+        <span class="open-when-icon">🥺</span>
+        <span class="open-when-label">When you miss me</span>
+      </div>
+      <div class="open-when-card" onclick="openWhenModal(1)">
+        <span class="open-when-icon">☁️</span>
+        <span class="open-when-label">When you feel stressed</span>
+      </div>
+      <div class="open-when-card" onclick="openWhenModal(2)">
+        <span class="open-when-icon">😄</span>
+        <span class="open-when-label">When you need a laugh</span>
+      </div>
+      <div class="open-when-card" onclick="openWhenModal(3)">
+        <span class="open-when-icon">🏆</span>
+        <span class="open-when-label">When you achieved a goal</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. NEW: INFINITE HUG & COMPLIMENT JAR -->
+  <section id="hug-jar-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ take what you need ~</div>
+      <h2 class="section-title">The Sister Hug & Compliment Jar 🍯</h2>
+      <p class="section-desc">Tap the cookie jar to pull out a sweet brotherly reminder whenever you want!</p>
+    </div>
+
+    <div class="scrapbook-card jar-container">
+      <div class="cookie-jar-btn" onclick="dispenseCompliment()" title="Click for a compliment!">
+        🧸
+      </div>
+      <div class="compliment-bubble" id="compliment-text">
+        "Tap the teddy jar to get a surprise compliment from your brother!"
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 8 REASONS FLIP CARDS -->
+  <section id="reasons-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ reasons why you're adored ~</div>
+      <h2 class="section-title">8 Reasons You're The Best Sister 🌸</h2>
+      <p class="section-desc">Flip all cards to collect your little compliments!</p>
+    </div>
+
+    <div class="reasons-bar">
+      <span>Cards Unwrapped:</span>
+      <span id="reasons-stat-counter" style="font-weight:700;">0 / 8</span>
+    </div>
+
+    <div class="reasons-deck" id="reasons-deck-holder"></div>
+  </section>
+
+  <!-- 13. MINI GAME: CATCH THE BOBA & BERRIES -->
+  <section id="game-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ picnic challenge ~</div>
+      <h2 class="section-title">Catch the Treats! 🍓🧋</h2>
+      <p class="section-desc">Move the woven basket to catch falling goodies in 20 seconds!</p>
+    </div>
+
+    <div class="scrapbook-card">
+      <div class="game-viewport" id="game-arena-surface">
+        <div class="game-hud">
+          <div>Score: <span id="game-score-display" style="color:var(--rose-pink); font-weight:700;">0</span> 🍓</div>
+          <div>Time: <span id="game-timer-display">20</span>s</div>
+        </div>
+        <div id="picnic-basket">🧺</div>
+      </div>
+      <div style="text-align:center; margin-top:20px;">
+        <button class="cozy-btn" id="start-game-trigger" onclick="beginPicnicGame()">Play Challenge 🍓</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. KAWAII CAKE & CANDLE BLOW FINALE -->
+  <section id="cake-section">
+    <div class="section-ribbon">
+      <div class="section-eyebrow">~ make a birthday wish ~</div>
+      <h2 class="section-title">Blow Out the Candles! 🎂</h2>
+      <p class="section-desc">Click each flame or enable microphone blow detection!</p>
+    </div>
+
+    <div class="scrapbook-card cake-spotlight">
+      <div class="kawaii-cake-container">
+        <div class="candles-tier">
+          <div class="striped-candle" onclick="extinguishFlame(this)">
+            <div class="candle-flame-orb"></div>
+          </div>
+          <div class="striped-candle" onclick="extinguishFlame(this)">
+            <div class="candle-flame-orb"></div>
+          </div>
+          <div class="striped-candle" onclick="extinguishFlame(this)">
+            <div class="candle-flame-orb"></div>
+          </div>
+        </div>
+        <div class="sponge-cake">
+          <div class="cream-drips"></div>
+        </div>
+      </div>
+
+      <button class="mic-sensor-btn" id="mic-toggle-btn" onclick="activateMicBlow()">🎙️ Blow with Microphone</button>
+      <p id="mic-prompt-msg" style="font-size:0.85rem; color:var(--cocoa-muted); margin-top:8px;"></p>
+
+      <div id="finale-congrats">
+        <h2 style="font-family:var(--font-heading); font-size:2.6rem; color:var(--rose-deep); margin-bottom:12px;">
+          🎉 Happy Birthday, Sindhu! 🎀
+        </h2>
+        <p style="max-width:540px; margin:0 auto; line-height:1.8; font-size:1.15rem; color:var(--warm-cocoa);">
+          Even though distance keeps me away today, remember that your brother is always rooting for you and loves you unconditionally. May this year bring you all the happiness and success in the world! 💖
+        </p>
+        <div style="margin-top:24px;">
+          <button class="cozy-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">Back to Top 🌸</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    Crafted with all my love for my sister Sindhu 🎀✨
+  </footer>
+
+  <!-- POLAROID LIGHTBOX DIALOG -->
+  <div id="polaroid-modal" class="cozy-modal" onclick="dismissPolaroidModal()">
+    <div class="modal-paper" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" onclick="dismissPolaroidModal()">×</button>
+      <img id="modal-zoom-img" style="width:100%; max-height:60vh; object-fit:contain; border-radius:8px;" src="" alt="Enlarged Memory">
+      <div id="modal-zoom-cap" style="font-family:var(--font-hand); font-size:1.9rem; color:var(--rose-deep); margin-top:14px; font-weight:700;"></div>
+    </div>
+  </div>
+
+  <!-- BROTHER'S LETTER DIALOG -->
+  <div id="letter-dialog" class="cozy-modal">
+    <div class="modal-paper" style="max-height:85vh; overflow-y:auto; text-align:left; font-family:var(--font-hand); font-size:1.6rem;">
+      <button class="modal-close-btn" onclick="dismissLetterSheet()">×</button>
+      <h3 style="font-size:2.3rem; color:var(--rose-deep); margin-bottom:12px;">Dearest Sindhu 🍓,</h3>
+      <div id="typewriter-body" style="line-height:1.65; color:var(--warm-cocoa);"></div>
+      <div style="margin-top:26px; text-align:right; font-weight:700; color:var(--rose-deep);">
+        Forever your proud brother,<br>
+        With all my love & hugs! 🧸💖
+      </div>
+    </div>
+  </div>
+
+  <!-- "OPEN WHEN..." DIALOG -->
+  <div id="open-when-modal" class="cozy-modal">
+    <div class="modal-paper">
+      <button class="modal-close-btn" onclick="dismissOpenWhenModal()">×</button>
+      <div id="open-when-modal-icon" style="font-size:3rem; margin-bottom:10px;"></div>
+      <h3 id="open-when-modal-title" style="font-family:var(--font-heading); color:var(--rose-deep); font-size:1.8rem; margin-bottom:12px;"></h3>
+      <p id="open-when-modal-content" style="font-family:var(--font-hand); font-size:1.6rem; line-height:1.6; color:var(--warm-cocoa);"></p>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       JAVASCRIPT LOGIC & AUDIO ENGINE
+       ========================================================== */ -->
+  <script>
+    /* 1. DATA & CONTENT */
+    const SINDHU_CONFIG = {
+      name: "Sindhu",
+      dob: "2007-11-02T00:00:00",
+      photos: [
+        { src: "images/photo1.jpg", caption: "Chief Troublemaker 🎀" },
+        { src: "images/photo2.jpg", caption: "Prettiest Smile ☀️" },
+        { src: "images/photo3.jpg", caption: "Forever Teammates 🫶" }
+      ],
+      reasons: [
+        "You make the dullest family dinners 10x funnier with your jokes.",
+        "Your laugh is genuinely the most contagious, heartwarming sound.",
+        "You always know when I need a hug without me having to ask.",
+        "Your savage comebacks that keep everyone on their toes.",
+        "Sharing midnight kitchen raids and stealing each other's snacks.",
+        "You have the courage to stand up for yourself and who you love.",
+        "You are the most trustworthy vault for every secret I have.",
+        "Because having you as my sister is life's sweetest gift! 💖"
+      ],
+      letterText: `Happy Birthday, my wonderful little sister!\n\nFirst, I want to say I am so, so sorry that I can't be right there with you in person today to celebrate your special day. It truly breaks my heart that I can't be there to give you a birthday hug, share a laugh, or steal a slice of your cake like we always do.\n\nBecause distance keeps me away from you at this moment, I poured my heart into building this little website—your own personal dreamland—just so you'd know that no matter where I am in the world, your brother is thinking of you, celebrating you, and cheering you on.\n\nIt feels like just yesterday you were that tiny girl born on November 2, 2007, running around the house and creating chaos. Now, you've grown into such an inspiring, smart, beautiful, and kind-hearted person. Thank you for all the laughs, the inside jokes only we understand, and for being the greatest sister anyone could ever ask for.\n\nI hope your year is filled with boundless happiness, sweet memories, straight-A victories, and all the boba and strawberry treats you could ever want. Blow out your candles knowing how deeply you are loved.\n\nI miss you tons. Have the happiest birthday, Sindhu!\n\nForever your proud brother,\nWith all my love & biggest hugs! 🧸💖`,
+      openWhenNotes: [
+        {
+          icon: "🥺",
+          title: "When You Miss Me",
+          text: "Remember that distance is just geography! Whenever you miss me, send me a voice note or call me. Even if we're miles apart, you will always be my little sister, and I'm always just one ring away. Hug a pillow and know I'm sending you the biggest hug right now!"
+        },
+        {
+          icon: "☁️",
+          title: "When You Feel Stressed",
+          text: "Take a deep breath, Sindhu. You are way stronger and smarter than whatever is worrying you right now. Don't carry the weight of the world on your shoulders. Grab your favorite snack, put on cozy socks, and take it one baby step at a time. Your brother believes in you 100%!"
+        },
+        {
+          icon: "😄",
+          title: "When You Need A Good Laugh",
+          text: "Remember the time we tried to cook and made a total disaster of the kitchen? Or when we argued over who got the last piece of chocolate only for it to melt? You make life so much funnier, Sindhu. Keep smiling, because your smile is pure sunshine!"
+        },
+        {
+          icon: "🏆",
+          title: "When You Achieved A Goal",
+          text: "I KNEW YOU COULD DO IT! I am so ridiculously proud of you! Never doubt your brilliance. Celebrate this win, treat yourself to something delicious, and remember that this is just one of many mountains you are going to conquer!"
+        }
+      ],
+      compliments: [
+        "Sindhu, your kindness is so genuine it makes everyone around you feel safe.",
+        "You have the sharpest wit and funniest humor in the whole family!",
+        "Never forget how brilliant and capable you are, little sister.",
+        "Your smile can literally brighten up the gloomiest rainy day.",
+        "You are growing into an incredible, strong, independent woman.",
+        "Your brother will always, always have your back no matter what.",
+        "The world became so much more colorful the day you were born in 2007!",
+        "You deserve all the boba, chocolates, and happiness this world has to offer!"
+      ]
+    };
+
+    /* 2. FUNCTIONAL AUDIO ENGINE (WEB AUDIO API MUSIC BOX + STREAMING FALLBACK) */
+    let audioCtx = null;
+    let isPlaying = false;
+    let currentTrackMode = "musicbox"; // "musicbox" or "lofi"
+    let lofiAudio = new Audio();
+    lofiAudio.crossOrigin = "anonymous";
+    lofiAudio.loop = true;
+    lofiAudio.src = "https://cdn.pixabay.com/download/audio/2022/03/15/audio_2491a679e4.mp3"; // High reliability acoustic lofi
+
+    let synthInterval = null;
+    let masterGainNode = null;
+    let masterVolume = 0.7;
+
+    // Charming music box melody chord progression (C, G, Am, F)
+    const melodyNotes = [
+      523.25, 659.25, 783.99, 1046.50, // C5, E5, G5, C6
+      392.00, 493.88, 587.33, 783.99,  // G4, B4, D5, G5
+      440.00, 523.25, 659.25, 880.00,  // A4, C5, E5, A5
+      349.23, 440.00, 523.25, 698.46   // F4, A4, C5, F5
+    ];
+    let noteIndex = 0;
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+        masterGainNode = audioCtx.createGain();
+        masterGainNode.gain.setValueAtTime(masterVolume, audioCtx.currentTime);
+        masterGainNode.connect(audioCtx.destination);
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playMusicBoxChime(freq) {
+      if (!audioCtx || !isPlaying || currentTrackMode !== "musicbox") return;
+      const osc = audioCtx.createOscillator();
+      const noteGain = audioCtx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+      // Bell-like music box decay
+      const now = audioCtx.currentTime;
+      noteGain.gain.setValueAtTime(0.35, now);
+      noteGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+      osc.connect(noteGain);
+      noteGain.connect(masterGainNode);
+
+      osc.start(now);
+      osc.stop(now + 1.2);
+    }
+
+    function startMusicBox() {
+      if (synthInterval) clearInterval(synthInterval);
+      synthInterval = setInterval(() => {
+        if (!isPlaying || currentTrackMode !== "musicbox") return;
+        playMusicBoxChime(melodyNotes[noteIndex]);
+        noteIndex = (noteIndex + 1) % melodyNotes.length;
+      }, 420);
+    }
+
+    function toggleAudio() {
+      initAudioContext();
+      const btn = document.getElementById('play-pause-btn');
+      const dock = document.getElementById('music-dock-pill');
+
+      if (!isPlaying) {
+        isPlaying = true;
+        btn.textContent = "❚❚";
+        dock.classList.add('playing');
+
+        if (currentTrackMode === "musicbox") {
+          startMusicBox();
+        } else {
+          lofiAudio.volume = masterVolume;
+          lofiAudio.play().catch(() => {
+            // If stream is blocked, fall back seamlessly to built-in music box!
+            currentTrackMode = "musicbox";
+            document.getElementById('track-name-label').textContent = "Fairy Music Box 🎶";
+            startMusicBox();
+          });
+        }
+      } else {
+        isPlaying = false;
+        btn.textContent = "▶";
+        dock.classList.remove('playing');
+        if (synthInterval) clearInterval(synthInterval);
+        lofiAudio.pause();
+      }
+    }
+
+    function switchAudioSource() {
+      initAudioContext();
+      if (currentTrackMode === "musicbox") {
+        currentTrackMode = "lofi";
+        document.getElementById('track-name-label').textContent = "Cozy Lofi Song ☕";
+        if (synthInterval) clearInterval(synthInterval);
+        if (isPlaying) {
+          lofiAudio.volume = masterVolume;
+          lofiAudio.play().catch(() => switchAudioSource());
+        }
+      } else {
+        currentTrackMode = "musicbox";
+        document.getElementById('track-name-label').textContent = "Fairy Music Box 🎶";
+        lofiAudio.pause();
+        if (isPlaying) startMusicBox();
+      }
+    }
+
+    function adjustVolume(val) {
+      masterVolume = parseFloat(val);
+      if (masterGainNode && audioCtx) {
+        masterGainNode.gain.setValueAtTime(masterVolume, audioCtx.currentTime);
+      }
+      lofiAudio.volume = masterVolume;
+    }
+
+    /* 3. LOADER & ENTER EXPERIENCE */
+    let loadProgress = 0;
+    const loadMeter = document.getElementById('load-meter');
+    const enterBtn = document.getElementById('enter-button');
+    const loaderScreen = document.getElementById('loader-screen');
+
+    const loaderInterval = setInterval(() => {
+      loadProgress += Math.floor(Math.random() * 25) + 12;
+      if (loadProgress >= 100) {
+        loadProgress = 100;
+        clearInterval(loaderInterval);
+        document.querySelector('.loader-track').style.display = 'none';
+        enterBtn.style.display = 'inline-block';
+      }
+      loadMeter.style.width = loadProgress + '%';
+    }, 120);
+
+    function enterDreamland() {
+      // User gesture starts audio reliably
+      toggleAudio();
+      loaderScreen.style.opacity = '0';
+      setTimeout(() => loaderScreen.style.display = 'none', 700);
+    }
+
+    /* 4. LIVE LIFETIME COUNTER */
+    function updateLifetimeCounter() {
+      const birthDate = new Date("2007-11-02T00:00:00");
+      const now = new Date();
+      const diffMs = now - birthDate;
+
+      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
+      const seconds = Math.floor((diffMs / 1000) % 60);
+
+      document.getElementById('days-count').textContent = days.toLocaleString();
+      document.getElementById('hours-count').textContent = hours;
+      document.getElementById('minutes-count').textContent = minutes;
+      document.getElementById('seconds-count').textContent = seconds;
+    }
+    setInterval(updateLifetimeCounter, 1000);
+    updateLifetimeCounter();
+
+    /* 5. 3 POLAROIDS LIGHTBOX */
+    function openPolaroidModal(index) {
+      const modal = document.getElementById('polaroid-modal');
+      const imgTarget = document.getElementById('modal-zoom-img');
+      const capTarget = document.getElementById('modal-zoom-cap');
+      const sourceImg = document.getElementById(`polaroid-img-${index}`);
+
+      imgTarget.src = sourceImg.src;
+      capTarget.textContent = SINDHU_CONFIG.photos[index].caption;
+      modal.classList.add('active');
+    }
+
+    function dismissPolaroidModal() {
+      document.getElementById('polaroid-modal').classList.remove('active');
+    }
+
+    function makePastelPlaceholder(imgEl, title, icon) {
+      imgEl.onerror = null;
+      imgEl.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500"><rect width="100%" height="100%" fill="%23FFE4EE"/><circle cx="250" cy="220" r="100" fill="%23F8C8DC"/><text x="250" y="248" font-size="80" text-anchor="middle">${icon}</text><text x="250" y="380" font-family="sans-serif" font-weight="bold" font-size="24" fill="%23E99AB5" text-anchor="middle">${encodeURIComponent(title)}</text><text x="250" y="420" font-family="sans-serif" font-size="16" fill="%236B4F55" text-anchor="middle">Add to images/photo${imgEl.id.split('-')[2]*1+1}.jpg</text></svg>`;
+    }
+
+    /* 6. TYPEWRITER LETTER */
+    function openLetterSheet() {
+      const dialog = document.getElementById('letter-dialog');
+      const box = document.getElementById('typewriter-body');
+      dialog.classList.add('active');
+      box.innerHTML = '';
+
+      let i = 0;
+      const text = SINDHU_CONFIG.letterText;
+      const typing = setInterval(() => {
+        if (i < text.length) {
+          box.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+          i++;
+        } else {
+          clearInterval(typing);
+        }
+      }, 16);
+    }
+
+    function dismissLetterSheet() {
+      document.getElementById('letter-dialog').classList.remove('active');
+    }
+
+    /* 7. SISTER VOUCHERS REDEEM */
+    function redeemCoupon(id, title) {
+      const card = document.getElementById(id);
+      if (!card.classList.contains('redeemed')) {
+        card.classList.add('redeemed');
+        const btn = card.querySelector('.redeem-btn');
+        btn.textContent = "Claimed! ✓";
+        alert(`🎟️ "${title}" redeemed! Send a screenshot to your brother to claim it! 💖`);
+      }
+    }
+
+    /* 8. "OPEN WHEN..." MODALS */
+    function openWhenModal(idx) {
+      const data = SINDHU_CONFIG.openWhenNotes[idx];
+      document.getElementById('open-when-modal-icon').textContent = data.icon;
+      document.getElementById('open-when-modal-title').textContent = data.title;
+      document.getElementById('open-when-modal-content').textContent = data.text;
+      document.getElementById('open-when-modal').classList.add('active');
+    }
+
+    function dismissOpenWhenModal() {
+      document.getElementById('open-when-modal').classList.remove('active');
+    }
+
+    /* 9. COMPLIMENT DISPENSER */
+    function dispenseCompliment() {
+      const list = SINDHU_CONFIG.compliments;
+      const chosen = list[Math.floor(Math.random() * list.length)];
+      const box = document.getElementById('compliment-text');
+      box.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        box.textContent = `"${chosen}"`;
+        box.style.transform = "scale(1)";
+      }, 150);
+    }
+
+    /* 10. REASONS FLIP CARDS */
+    let openedReasons = 0;
+    const reasonsContainer = document.getElementById('reasons-deck-holder');
+    SINDHU_CONFIG.reasons.forEach((note, idx) => {
+      const card = document.createElement('div');
+      card.className = 'reason-card-unit';
+      card.innerHTML = `
+        <div class="reason-card-flipper">
+          <div class="reason-side reason-side-front">
+            <span>🎀 0${idx+1}</span>
+            <span>Tap to unwrap</span>
+          </div>
+          <div class="reason-side reason-side-back">${note}</div>
+        </div>
+      `;
+      card.addEventListener('click', () => {
+        if (!card.classList.contains('is-flipped')) {
+          card.classList.add('is-flipped');
+          openedReasons++;
+          document.getElementById('reasons-stat-counter').textContent = `${openedReasons} / ${SINDHU_CONFIG.reasons.length}`;
+        }
+      });
+      reasonsContainer.appendChild(card);
+    });
+
+    /* 11. MINI GAME: CATCH THE BOBA & BERRIES */
+    let gameActive = false, scoreCount = 0, timerRemaining = 20, loopTicker, dropSpawner;
+    const arena = document.getElementById('game-arena-surface');
+    const basket = document.getElementById('picnic-basket');
+
+    function beginPicnicGame() {
+      if (gameActive) return;
+      gameActive = true;
+      scoreCount = 0;
+      timerRemaining = 20;
+      document.getElementById('game-score-display').textContent = '0';
+      document.getElementById('game-timer-display').textContent = '20';
+      document.getElementById('start-game-trigger').disabled = true;
+
+      arena.addEventListener('pointermove', shiftBasket);
+      dropSpawner = setInterval(createDroppingTreat, 420);
+      loopTicker = setInterval(() => {
+        timerRemaining--;
+        document.getElementById('game-timer-display').textContent = timerRemaining;
+        if (timerRemaining <= 0) finishPicnicGame();
+      }, 1000);
+    }
+
+    function shiftBasket(e) {
+      const bounds = arena.getBoundingClientRect();
+      const x = Math.max(30, Math.min(bounds.width - 30, e.clientX - bounds.left));
+      basket.style.left = `${x}px`;
+    }
+
+    function createDroppingTreat() {
+      if (!gameActive) return;
+      const treat = document.createElement('div');
+      treat.className = 'dropping-treat';
+      const treats = ['🍓', '🧋', '🧁', '🍰', '🌸', '✨'];
+      treat.textContent = treats[Math.floor(Math.random() * treats.length)];
+      treat.style.left = `${Math.random() * (arena.clientWidth - 45) + 15}px`;
+      treat.style.animationDuration = `${Math.random() * 1.3 + 1.8}s`;
+      arena.appendChild(treat);
+
+      const hitCheck = setInterval(() => {
+        if (!gameActive) {
+          clearInterval(hitCheck);
+          treat.remove();
+          return;
+        }
+        const tRect = treat.getBoundingClientRect();
+        const bRect = basket.getBoundingClientRect();
+
+        if (
+          tRect.bottom >= bRect.top + 10 &&
+          tRect.top <= bRect.bottom &&
+          tRect.right >= bRect.left &&
+          tRect.left <= bRect.right
+        ) {
+          scoreCount++;
+          document.getElementById('game-score-display').textContent = scoreCount;
+          clearInterval(hitCheck);
+          treat.remove();
+        }
+      }, 45);
+
+      treat.addEventListener('animationend', () => {
+        clearInterval(hitCheck);
+        treat.remove();
+      });
+    }
+
+    function finishPicnicGame() {
+      gameActive = false;
+      clearInterval(loopTicker);
+      clearInterval(dropSpawner);
+      arena.removeEventListener('pointermove', shiftBasket);
+      document.getElementById('start-game-trigger').disabled = false;
+      alert(`Woohoo! Sindhu gathered ${scoreCount} sweet treats! 🍓🧋`);
+    }
+
+    /* 12. CAKE CANDLES & CONFETTI FINALE */
+    let flamesOut = 0;
+    function extinguishFlame(candleEl) {
+      const flame = candleEl.querySelector('.candle-flame-orb');
+      if (flame && !flame.classList.contains('blown')) {
+        flame.classList.add('blown');
+        flamesOut++;
+        if (flamesOut >= 3) triggerGrandFinale();
+      }
+    }
+
+    function triggerGrandFinale() {
+      document.getElementById('finale-congrats').style.display = 'block';
+      document.getElementById('mic-toggle-btn').style.display = 'none';
+      popFairyConfetti();
+    }
+
+    async function activateMicBlow() {
+      const feedback = document.getElementById('mic-prompt-msg');
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        feedback.textContent = "Mic not supported on this device. Tap the flames!";
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        feedback.textContent = "Mic listening! Blow softly into your microphone! 💨";
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const analyser = ctx.createAnalyser();
+        const mic = ctx.createMediaStreamSource(stream);
+        analyser.fftSize = 256;
+        mic.connect(analyser);
+
+        const freqData = new Uint8Array(analyser.frequencyBinCount);
+        function detectBreath() {
+          if (flamesOut >= 3) return;
+          analyser.getByteFrequencyData(freqData);
+          let sum = freqData.reduce((a, b) => a + b, 0);
+          let avg = sum / freqData.length;
+          if (avg > 52) {
+            document.querySelectorAll('.striped-candle').forEach(c => extinguishFlame(c));
+          }
+          requestAnimationFrame(detectBreath);
+        }
+        detectBreath();
+      } catch (err) {
+        feedback.textContent = "Mic permission denied. Tap each candle to blow it out!";
+      }
+    }
+
+    function popFairyConfetti() {
+      const canvas = document.getElementById('confetti-sky');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ['#F8C8DC', '#FFE4EE', '#E99AB5', '#E6DDF8', '#DDF1FF', '#FFDCC8'];
+      for (let i = 0; i < 160; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          size: Math.random() * 8 + 4,
+          speedY: Math.random() * 4 + 2,
+          speedX: Math.random() * 2 - 1,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360
+        });
+      }
+
+      function renderConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.y += p.speedY;
+          p.x += p.speedX;
+          p.rotation += 2;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation * Math.PI / 180);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          if (p.y > canvas.height) p.y = -20;
+        });
+        requestAnimationFrame(renderConfetti);
+      }
+      renderConfetti();
+    }
+
+    /* 13. FLOATING FAIRY PARTICLES */
+    const fCanvas = document.getElementById('fairy-canvas');
+    const fCtx = fCanvas.getContext('2d');
+    let fairyElements = [];
+
+    function initFairyWorld() {
+      fCanvas.width = window.innerWidth;
+      fCanvas.height = window.innerHeight;
+      fairyElements = Array.from({ length: 26 }, () => ({
+        x: Math.random() * fCanvas.width,
+        y: Math.random() * fCanvas.height,
+        size: Math.random() * 12 + 8,
+        speedY: (Math.random() * 0.45 + 0.25) * -1,
+        speedX: Math.sin(Math.random() * Math.PI) * 0.3,
+        emoji: ['🎀', '🌸', '💖', '✨', '🍓', '🧸'][Math.floor(Math.random() * 6)]
+      }));
+    }
+    window.addEventListener('resize', initFairyWorld);
+    initFairyWorld();
+
+    function renderFairyWorld() {
+      fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+      fairyElements.forEach(d => {
+        d.y += d.speedY;
+        d.x += d.speedX;
+        if (d.y < -30) d.y = fCanvas.height + 30;
+        if (d.x < -30) d.x = fCanvas.width + 30;
+        if (d.x > fCanvas.width + 30) d.x = -30;
+        fCtx.font = `${d.size}px sans-serif`;
+        fCtx.fillText(d.emoji, d.x, d.y);
+      });
+      requestAnimationFrame(renderFairyWorld);
+    }
+    renderFairyWorld();
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        dismissPolaroidModal();
+        dismissLetterSheet();
+        dismissOpenWhenModal();
+      }
+    });
+  </script>
+</body>
+</html>
